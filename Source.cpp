@@ -7,6 +7,9 @@
 #include "Lista.h"
 #include "Stack.h"
 #include "ListaCircularyCola.h"
+#include "ListaDoblementeEnlazada.h"
+#include "PilaDeAcciones.h"
+
 
 using namespace std;
 
@@ -24,6 +27,9 @@ private:
     ListaSimple<Cliente>  listaClientes;   // Lista simple  - registro/listado
     Stack<Cliente>        pilaRecientes;   // Pila          - ultimos registrados
     ListaCircular<Cliente> listaCircular;  // Lista circular - busqueda/historial
+    
+    ListaClientes<Cliente> listaDoble;     //Lista doble enlazada - ordenar clientes
+    PilaAcciones<string>   pilaAcciones;   // Pila          - historial de acciones
 
     string filename;
     int    nextId;
@@ -172,10 +178,15 @@ public:
 
         Cliente nuevo(id, nombre, correo, telefono, codigo, activo, prioridad);
 
+
         // Agrega a ambas estructuras
         listaClientes.AddLast(nuevo);    // Lista simple
         pilaRecientes.Push(nuevo);       // Pila de recientes
         listaCircular.insertarFinal(nuevo); // Lista circular (para busqueda)
+
+        //Agregar a lista doble enlazada
+        listaDoble.registrarCliente(nuevo);
+
 
         saveToFile();
 
@@ -439,6 +450,128 @@ public:
     }
 
     // =========================================================
+    // Registrar interaccion
+    // =========================================================
+
+
+                // cout << "----Opciones de interaccion----\n";
+                // cout << "1. Registrar venta. \n";
+                // cout << "2. Registrar llamada.\n";
+                // cout << "3. Registrar email.\n";
+                // cout << "4. Eliminar venta.\n";
+                // cout << "5. Eliminar llamada.\n";
+
+
+                // void validarOpcionInteraccion(string &message) {
+
+                    
+                // int opcion = 0;
+
+                // cout << message;
+
+                // while(!(cin>>opcion) || opcion < 1 || opcion > 5) {
+                //     cout << "\n  [!] Opcion invalida. Ingrese un numero entre 1 y 5: ";
+                //     cin.clear();
+                //     cin.ignore(1000, '\n');
+                //     cout << message;
+                // }
+
+                // cout << "Opcion valida: " << opcion << endl;
+
+                // }
+
+    void validarOpcionInteraccion(const string &message, int &opcion) {
+
+        cout << "----Opciones de interaccion----\n";
+        cout << "1. Registrar venta. \n";
+        cout << "2. Registrar llamada.\n";
+        cout << "3. Eliminar venta.\n";
+        cout << "4. Eliminar llamada.\n";
+
+        cout << message;
+
+        while(!(cin>>opcion) || opcion < 1 || opcion > 4) {
+            cout << "\n  [!] Opcion invalida. Ingrese un numero entre 1 y 5: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << message;
+        }
+
+        cout << "Opcion valida... " << opcion << endl;
+
+    }
+
+    void registrarInteraccion() {
+
+        int opcion = 0;
+        validarOpcionInteraccion("Ingrese la opcion elegida: ", opcion);
+
+        switch (opcion) {
+            case 1:
+                //venta
+                pilaAcciones.registrarInteraccion("venta");
+                break;
+            case 2:
+                //llamada
+                pilaAcciones.registrarInteraccion("llamada");
+                break;
+            case 3:
+                pilaAcciones.eliminarInteraccion("venta");
+                //eliminar venta
+                break;
+            case 4:
+                pilaAcciones.eliminarInteraccion("llamada");
+                //eliminar llamada
+                break;
+        }
+
+    }
+
+
+    void validarOpcionOrdenamiento(const string &message, int &opcion) {
+
+        cout << "----Opciones de ordenamiento----\n";
+        cout << "1. nombre de empresa. \n";
+        cout << "2. codigo de usuario.\n";
+
+        cout << message;
+
+        while(!(cin>>opcion) || opcion < 1 || opcion > 2 {
+            cout << "\n  [!] Opcion invalida. Ingrese un numero entre 1 - 2: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << message;
+        }
+
+        cout << "Opcion valida... " << opcion << endl;
+    }
+
+
+    void ordenarClientes() {
+
+        int opcion = 0;
+        validarOpcionOrdenamiento("Ingrese la opcion de ordenamiento: ", opcion);
+
+            switch (opcion) {
+                case 1:
+                    //ordenar por nombre de empresa
+                    listaDoble.ordenarCliente_opcion("nombre");
+                    break;
+                case 2:
+                    //ordenar por codigo de usuario
+                    listaDoble.ordenarCliente_opcion("codigo");
+                    break;
+            }
+
+    }
+
+    // =========================================================
+    // Ordenar clientes
+    // =========================================================
+
+
+
+    // =========================================================
     // HELPERS: guardar y cargar archivo .txt
     // =========================================================
     void saveToFile() {
@@ -557,14 +690,8 @@ public:
             case 2: listarClientes();     break;
             case 3: buscarCliente();      break;
             case 4: historialCliente();   break;
-            case 5:
-                cout << "\n  [!] Modulo en desarrollo..." << endl;
-                pause();
-                break;
-            case 6:
-                cout << "\n  [!] Modulo en desarrollo..." << endl;
-                pause();
-                break;
+            case 5: registrarInteraccion(); break;
+            case 6: ordenarClientes(); break;
             case 0: cout << "\n  Cerrando CRM...\n"; break;
             default:
                 cout << "\n  [!] Opcion invalida." << endl;
