@@ -20,11 +20,44 @@ class ListaClientes {
                 while(temp -> next != nullptr){
                     temp = temp -> next;
                 }
-                nuevo -> prev = temp; 
+                // nuevo -> prev = temp; 
                 temp -> next = nuevo;
             }
             cout << "Usuario registrado exitosamente...\n";
         }
+
+        Nodo<T>* buscarCliente(string opcion, string valor) {
+
+            if(head == nullptr) {
+                cout<<"\n-------------------------------\n";
+                cout << "No hay clientes registrados...\n";
+                cout<<"-------------------------------\n\n";
+                return nullptr;
+            }
+
+            Nodo<T>* temp = head;
+
+            while(temp != nullptr) {
+            
+                if(opcion == "codigo") {
+                    if(temp->data.codigo_usuario == stoi(valor)) {
+                        return temp;
+                    }
+                }
+            
+                else if(opcion == "empresa") {
+                    if(temp->data.nombre_empresa == valor) {
+                        return temp;
+                    }
+                }
+            
+                temp = temp->next;
+            }
+            //  cout<<"Cliente no encontrado...\n";
+                return nullptr; // no encontrado
+
+            }
+
 
             //     ListaClientes<Cliente> listaDoble;     //Lista doble enlazada - ordenar clientes
     // PilaAcciones<string>   pilaAcciones;
@@ -97,34 +130,67 @@ class ListaClientes {
         }
 
         void ordenarCliente_opcion(string opcion) {
-            //opcion : ventas, codigo_usuario y nombre
-            //bubble sort -> comprar elementos adyacentes y cambiarlos de lugar. 
-            // class Cliente {
-            // public:
-            //     string nombre_empresa;
-            //     int codigo_usuario;
-            //     Nodo<Venta>* ventas;
 
-            //     Cliente(string nombre, int codigo) : nombre_empresa(nombre), codigo_usuario(codigo), ventas(nullptr) {}
-            // };
             if(head == nullptr) return;
-
+                
             bool swapped;
-            //garantiza que al menos entre a evaluar una vez
-            do{
+                
+            do {
                 swapped = false;
                 Nodo<T>* temp = head;
-
-                while(temp -> next != nullptr) {
-                    if(temp -> data.opcion > temp -> next -> data.opcion) {
-                        swap(temp->data, temp->next->data);
-                        swapped = true;
+            
+                while(temp->next != nullptr) {
+                
+                    bool condicion = false;
+                
+                    if(opcion == "nombre") {
+                        condicion = temp->data.nombre_empresa > temp->next->data.nombre_empresa;
                     }
-                    temp = temp->next;
+                
+                    else if(opcion == "codigo") {
+                        condicion = temp->data.codigo_usuario > temp->next->data.codigo_usuario;
+                    }
+                
+                    // else if(opcion == "ventas") {
+                    //     int total1 = sumarVentas(temp->data.ventas);
+                    //     int total2 = sumarVentas(temp->next->data.ventas);
+                    
+                    //     condicion = total1 > total2;
+                    // }
+
+                if(condicion) {
+                    swap(temp->data, temp->next->data);
+                    swapped = true;
                 }
-            }while(swapped)
+                temp = temp->next;
+            }
+        } while(swapped);
+}
+
+        void mostrarClientes(string opcion) {
+
+            if(head == nullptr) {
+                cout << "-------------------------------\n";
+                cout << "No hay clientes registrados...\n";
+                cout << "-------------------------------\n\n";
+                return;
+            }
+
+            Nodo<T>* temp = head;
+            while(temp != nullptr) {
+                cout << "-----------------------------\n";
+                if(opcion == "codigo") {
+                    cout << "codigo usuario: " << temp->data.codigo_usuario << endl;
+                } else {
+                    //nombre empresa
+                    cout << "Nombre empresa: " << temp->data.nombre_empresa << endl;
+                }
+
+                temp = temp -> next;
+            }
         }
 
+        
         void eliminarCliente(string opcion, string valor) {
 
             if(head == nullptr) return;

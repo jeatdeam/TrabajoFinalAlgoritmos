@@ -487,11 +487,12 @@ public:
         cout << "2. Registrar llamada.\n";
         cout << "3. Eliminar venta.\n";
         cout << "4. Eliminar llamada.\n";
+        cout << "5. Mostrar historial de interacciones.\n";
 
         cout << message;
 
-        while(!(cin>>opcion) || opcion < 1 || opcion > 4) {
-            cout << "\n  [!] Opcion invalida. Ingrese un numero entre 1 y 5: ";
+        while(!(cin>>opcion) || opcion < 1 || opcion > 5) {
+            cout << "\n  [!] Opcion invalida. Ingrese un numero entre 1 - 5: ";
             cin.clear();
             cin.ignore(1000, '\n');
             cout << message;
@@ -501,27 +502,67 @@ public:
 
     }
 
+    Nodo<Cliente>* ubicarUsuario() {
+
+    string tipo;
+    string valor;
+
+    cout << "----- buscar cliente -----\n";
+    cout << "Buscar por (codigo / empresa): ";
+    cin >> tipo;
+
+    cout << "Ingrese codigo de usuario-nombre de la empresa: ";
+    cin >> valor;
+
+    Nodo<Cliente>* encontrado = listaDoble.buscarCliente(tipo, valor);
+
+    if(encontrado == nullptr) {
+        // cout << "Cliente no encontrado...\n";
+        return encontrado;
+    }
+
+    cout << "Cliente encontrado: " << encontrado->data.nombre_empresa << endl;
+
+    return encontrado;
+ 
+}
+
     void registrarInteraccion() {
 
-        int opcion = 0;
-        validarOpcionInteraccion("Ingrese la opcion elegida: ", opcion);
+        Nodo<Cliente>* clienteNodo = ubicarUsuario();
+        bool flagInteraccion = false;
 
+        if(clienteNodo != nullptr) flagInteraccion = true; 
+
+        int opcion = 0;
+
+        if(flagInteraccion) {
+               validarOpcionInteraccion("Ingrese la opcion elegida: ", opcion);
+        } else {
+            return;
+        }
+
+     
         switch (opcion) {
             case 1:
                 //venta
-                pilaAcciones.registrarInteraccion("venta");
+                pilaAcciones.registrarInteraccion("venta", clienteNodo);
                 break;
             case 2:
                 //llamada
-                pilaAcciones.registrarInteraccion("llamada");
+                pilaAcciones.registrarInteraccion("llamada", clienteNodo);
                 break;
             case 3:
-                pilaAcciones.eliminarInteraccion("venta");
+                pilaAcciones.eliminarInteraccion("venta", clienteNodo);
                 //eliminar venta
                 break;
             case 4:
-                pilaAcciones.eliminarInteraccion("llamada");
+                pilaAcciones.eliminarInteraccion("llamada", clienteNodo);
                 //eliminar llamada
+                break;
+            case 5: 
+                pilaAcciones.mostrarTodasInteracciones("", false);
+                //mostrar historial de interacciones
                 break;
         }
 
@@ -536,30 +577,31 @@ public:
 
         cout << message;
 
-        while(!(cin>>opcion) || opcion < 1 || opcion > 2 {
-            cout << "\n  [!] Opcion invalida. Ingrese un numero entre 1 - 2: ";
+        while(!(cin>>opcion) || opcion < 1 || opcion > 2 ) {
+            cout << "\n  [!] Opcion invalida. Ingrese un numero entre 1 - 2: \n";
             cin.clear();
             cin.ignore(1000, '\n');
             cout << message;
         }
 
-        cout << "Opcion valida... " << opcion << endl;
     }
 
 
     void ordenarClientes() {
 
         int opcion = 0;
-        validarOpcionOrdenamiento("Ingrese la opcion de ordenamiento: ", opcion);
+        validarOpcionOrdenamiento("Ingrese la opcion de ordenamiento (1 - 2): ", opcion);
 
             switch (opcion) {
                 case 1:
                     //ordenar por nombre de empresa
                     listaDoble.ordenarCliente_opcion("nombre");
+                    listaDoble.mostrarClientes("nombre");
                     break;
                 case 2:
                     //ordenar por codigo de usuario
                     listaDoble.ordenarCliente_opcion("codigo");
+                    listaDoble.mostrarClientes("codigo");
                     break;
             }
 
@@ -661,8 +703,8 @@ public:
     void runMenu() {
         int opcion = 0;
         do {
-            clearScreen();
-            printHeader();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // clearScreen();
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // printHeader();
             cout << "  FLUJO: [Registrar] --> [Buscar] --> [Interaccion] --> [Historial]" << endl;
             cout << "  +--------------------------------------------------+" << endl;
             cout << "  |  REGISTRO Y LISTADO                              |" << endl;
@@ -677,8 +719,8 @@ public:
             cout << "  +--------------------------------------------------+" << endl;
             cout << "  |  OPERACIONES                                     |" << endl;
             cout << "  +--------------------------------------------------+" << endl;
-            cout << "  |   [5] Registrar interaccion  (proximamente...)   |" << endl;
-            cout << "  |   [6] Ordenar clientes       (proximamente...)   |" << endl;
+            cout << "  |   [5] Registrar interaccion                      |" << endl;
+            cout << "  |   [6] Ordenar clientes                           |" << endl;
             cout << "  +--------------------------------------------------+" << endl;
             cout << "  |   [0] Salir                                      |" << endl;
             cout << "  +--------------------------------------------------+" << endl;
@@ -690,7 +732,7 @@ public:
             case 2: listarClientes();     break;
             case 3: buscarCliente();      break;
             case 4: historialCliente();   break;
-            case 5: registrarInteraccion(); break;
+            case 5: registrarInteraccion();  break;
             case 6: ordenarClientes(); break;
             case 0: cout << "\n  Cerrando CRM...\n"; break;
             default:

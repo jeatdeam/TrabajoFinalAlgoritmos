@@ -7,7 +7,7 @@ template <typename T>
 class PilaAcciones {
         Nodo<T>* head;
         void mostrarRecursivo(Nodo<T>* aux, int count, string accion = "", bool eleccion = false) {
-
+            //accion -> venta, llamada, etc
             if(aux == nullptr) return;
 
             if(eleccion == false) {
@@ -29,16 +29,25 @@ class PilaAcciones {
     // PilaAcciones<string>   pilaAcciones;   // Pila          - historial de acciones
 
 
-        void registrarInteraccion(T interaccion){
-                Nodo<T>* nuevo = new Nodo<T>(interaccion);
-                nuevo -> next = head;
-                head = nuevo;
+        void registrarInteraccion(T interaccion, Nodo<Cliente>* cliente){
+        
+            // 🔹 nodo para la pila
+            Nodo<T>* nuevoPila = new Nodo<T>(interaccion);
+            nuevoPila->next = head;
+            head = nuevoPila;
+        
+            // 🔹 nodo para el cliente
+            Nodo<T>* nuevoCliente = new Nodo<T>(interaccion);
+            nuevoCliente->next = cliente->data.interacciones;
+            cliente->data.interacciones = nuevoCliente;
+        
+            cout << "Interaccion registrada exitosamente -> " << interaccion << endl;
         }
 
-        void eliminarInteraccion(T interaccion) {
-
-           Nodo<T>* temp = head; 
-           Nodo<T>* prev = nullptr;
+        void eliminarInteraccion(T interaccion, Nodo<Cliente>* cliente) {
+            // Eliminar de la pila
+            Nodo<T>* temp = head; 
+            Nodo<T>* prev = nullptr;
 
             while(temp != nullptr) {
             
@@ -49,11 +58,32 @@ class PilaAcciones {
                         prev->next = temp->next;
                     }
                     delete temp;
-                    return;
+                    break;
                 }
             
                 prev = temp;
                 temp = temp->next;
+            }
+
+            // Eliminar del cliente
+
+           Nodo<T>* temp2 = head; 
+           Nodo<T>* prev2 = nullptr;
+
+            while(temp2 != nullptr) {
+            
+                if(temp2->data == interaccion) {
+                    if(prev2 == nullptr) { //SI es el ultimo elemento de la pila 
+                        head = head->next;
+                    } else {
+                        prev2->next = temp2->next;
+                    }
+                    delete temp;
+                    return;
+                }
+            
+                prev2 = temp2;
+                temp2 = temp2->next;
             }
         }
 

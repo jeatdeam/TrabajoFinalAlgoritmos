@@ -43,6 +43,7 @@ public:
     int          activo;     // 1 = Activo, 0 = Inactivo
     int          prioridad;  // 1 = Normal, 2 = VIP, 3 = Prioritario
     Nodo<Venta>* ventas;
+    Nodo<string>* interacciones;
 
     Cliente(string id = "", string nombre = "", string correo = "",
         string telefono = "", int codigo = 0,
@@ -55,6 +56,7 @@ public:
         this->activo = activo;
         this->prioridad = prioridad;
         this->ventas = nullptr;
+        this->interacciones = nullptr;
     }
 
     void mostrar() const {

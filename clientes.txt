@@ -2,3 +2,4 @@
 # id|nombre|correo|telefono|codigo|activo|prioridad
 CL1|Google|google@gmail.com|998166826|101|1|1
 CL2|Amazon|amazon@gmail.com|192949131|500|1|1
+CL3|cuack|firtsadic@gmail.com|986680850|0|1|1
