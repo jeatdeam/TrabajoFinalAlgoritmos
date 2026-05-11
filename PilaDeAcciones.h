@@ -29,43 +29,56 @@ class PilaAcciones {
     // PilaAcciones<string>   pilaAcciones;   // Pila          - historial de acciones
 
 
-         void registrarVenta(int codigo_usuario, int cantidadVendida, Nodo<Cliente>* cliente) {
+        void mostrarVentas(Nodo<Cliente>* cliente){
 
-            Nodo<T>* temp = head; //esto no apunta a un objeto cliente, sino a un nodo que contiene un cliente.
+           if(cliente == nullptr) return;
 
-            while (temp != nullptr) {
+           Nodo<Venta>* temp = cliente->data.ventas;
 
-                if (temp->data.codigo_usuario == codigo_usuario) {
+           int count = 1;
 
-                    Venta v(cantidadVendida); 
-                    Nodo<Venta>* nueva_venta = new Nodo<Venta>(v); 
-                    if (temp->data.ventas == nullptr) { 
-                        temp->data.ventas = nueva_venta; 
+           cout << "----- Ventas del cliente -----\n";
 
-                    } else {
-                        
-                        Nodo<Venta>* aux = temp->data.ventas;
-                        while (aux->next != nullptr) {
-                            aux = aux->next;
-                        }
+           while(temp != nullptr) {
 
-                        aux->next = nueva_venta;
-                        nueva_venta->prev = aux;
-                    }
+               cout << count << ".   S/." << temp->data.monto << endl;
+               count++;
 
-                    cout << "Se ha registrado una nueva venta...\n";
-                    return;
+               temp = temp->next;
+           }
+       
+           if(count == 1) {
+               cout << "No hay ventas registradas.\n";
+           }
+        }
+
+         void registrarVenta(int cantidadVendida, Nodo<Cliente>* cliente) {
+
+            if(cliente == nullptr) return;
+
+            Venta v(cantidadVendida);
+            Nodo<Venta>* nueva_venta = new Nodo<Venta>(v);
+
+            if(cliente->data.ventas == nullptr) {
+                cliente->data.ventas = nueva_venta;
+            } else {
+                Nodo<Venta>* aux = cliente->data.ventas;
+            
+                while(aux->next != nullptr) {
+                    aux = aux->next;
                 }
-
-                temp = temp->next;
-    }
-        cout << "Cliente no encontrado...\n";
-    }
+            
+                aux->next = nueva_venta;
+                // solo si tienes lista doble:
+                // nueva_venta->prev = aux;
+            }
+        
+            cout << "Se ha registrado una nueva venta...\n";
+        }
 
 
         void registrarInteraccion(T interaccion, Nodo<Cliente>* cliente){
-        
-            // 🔹 nodo para la pila
+  
             Nodo<T>* nuevoPila = new Nodo<T>(interaccion);
             nuevoPila->next = head;
             head = nuevoPila;

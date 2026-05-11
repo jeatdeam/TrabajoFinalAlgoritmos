@@ -534,10 +534,27 @@ public:
  
 }
 
+    void agregarMontoVenta(int &monto) {
+
+        cout << "\n\n----- registrar venta -----\n";
+        cout << "Ingrese el monto de la venta: ";
+        cin >> monto;
+
+        while(!(cin >> monto) || monto <= 0) {
+            cout << "\n  [!] Monto invalido. Ingrese un numero mayor a 0: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Ingrese el monto de la venta: ";
+        }
+
+    }
+
+
     void registrarInteraccion() {
 
         Nodo<Cliente>* clienteNodo = ubicarUsuario();
         bool flagInteraccion = false;
+        int montoVenta = 0;
 
         if(clienteNodo != nullptr) flagInteraccion = true; 
 
@@ -554,7 +571,8 @@ public:
             case 1:
                 //venta
                 pilaAcciones.registrarInteraccion("venta", clienteNodo);
-                pilaAcciones.registrarVenta()
+                agregarMontoVenta(montoVenta);
+                pilaAcciones.registrarVenta(montoVenta,clienteNodo);
                 break;
             case 2:
                 //llamada
@@ -570,6 +588,7 @@ public:
                 break;
             case 5: 
                 pilaAcciones.mostrarTodasInteracciones("", false);
+                pilaAcciones.mostrarVentas(clienteNodo);
                 //mostrar historial de interacciones
                 break;
         }

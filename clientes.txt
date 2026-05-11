@@ -6,3 +6,4 @@ CL3|cuack|firtsadic@gmail.com|986680850|0|1|1
 CL4|paulo|firtsadic@gmail.com|98680850|0|0|1
 CL5|paulo|firtsadic@gmail.com|123456789|501|1|1
 CL6|paulo|a@a.com|986845654|5011|1|2
+CL7|paulo|a@a.com|123456789|501|1|1
